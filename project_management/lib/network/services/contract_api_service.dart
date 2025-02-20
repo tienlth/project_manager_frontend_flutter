@@ -9,4 +9,8 @@ class ContractApiService {
     return response.data;
   }
 
+  Future<Map<String, dynamic>> fetchContractById(String contractId) async {
+    final response = await _dio.get('/contracts/$contractId');
+    return response.data;
+  }
 }

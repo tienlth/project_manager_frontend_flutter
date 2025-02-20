@@ -9,4 +9,9 @@ class QuotationApiService {
     return response.data;
   }
 
+  Future<Map<String, dynamic>> fetchQuotationById(String quotationId) async {
+    final response = await _dio.get('/quotations/$quotationId');
+    return response.data;
+  }
+
 }

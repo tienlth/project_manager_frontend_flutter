@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_management/bloc/quotation_cubit.dart';
+import 'quotation_detail_page.dart';
 
 class QuotationsPage extends StatefulWidget {
   const QuotationsPage({super.key});
@@ -40,8 +41,10 @@ class _QuotationsPageState extends State<QuotationsPage> {
                   return Card(
                     margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     child: ListTile(
-                      title: Text("Báo giá cho: ${quotation["project"]["projectName"]}",
-                          style: const TextStyle(fontWeight: FontWeight.bold)),
+                      title: Text(
+                        "Báo giá cho: ${quotation["project"]["projectName"]}",
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -49,6 +52,14 @@ class _QuotationsPageState extends State<QuotationsPage> {
                           Text("Số công việc: ${quotation["taskCosts"].length}"),
                         ],
                       ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => QuotationDetailPage(quotationId: quotation["_id"]),
+                          ),
+                        );
+                      },
                     ),
                   );
                 },

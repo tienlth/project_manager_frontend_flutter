@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_management/bloc/contract_cubit.dart';
+import 'package:project_management/views/contract_detail_page.dart';
+import 'package:project_management/views/contract_edit_page.dart';
 
 class ContractsPage extends StatefulWidget {
   const ContractsPage({super.key});
@@ -14,6 +16,27 @@ class _ContractsPageState extends State<ContractsPage> {
   void initState() {
     super.initState();
     context.read<ContractCubit>().fetchContracts();
+  }
+
+  void _navigateToContract(BuildContext context, Map<String, dynamic> contract) {
+    final String contractId = contract["_id"];
+    final bool isDraft = contract["isDraft"] ?? true;
+
+    if (isDraft) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ContractEditPage(contractData: contract),
+        ),
+      );
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ContractDetailPage(contractId: contractId),
+        ),
+      );
+    }
   }
 
   @override
@@ -40,8 +63,10 @@ class _ContractsPageState extends State<ContractsPage> {
                   return Card(
                     margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     child: ListTile(
-                      title: Text("Hợp đồng dự án: ${contract["project"]["projectName"]}",
-                          style: const TextStyle(fontWeight: FontWeight.bold)),
+                      title: Text(
+                        "Hợp đồng dự án: ${contract["project"]["projectName"]}",
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -50,6 +75,7 @@ class _ContractsPageState extends State<ContractsPage> {
                           Text("Trạng thái: ${contract["isDraft"] ? "Nháp" : "Chính thức"}"),
                         ],
                       ),
+                      onTap: () => _navigateToContract(context, contract),
                     ),
                   );
                 },

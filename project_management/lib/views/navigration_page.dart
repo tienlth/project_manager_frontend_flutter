@@ -1,16 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:project_management/bloc/project_cubit.dart';
 import 'package:project_management/views/contracts_page.dart';
 import 'package:project_management/views/projects_page.dart';
 import 'package:project_management/views/quotations_page.dart';
 import 'package:project_management/views/tasks_page.dart';
 import 'package:project_management/views/widgets/app_bar.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-// import 'projects_page.dart';
-// import 'tasks_page.dart';
-// import 'quotations_page.dart';
-// import 'contracts_page.dart';
-// import 'settings_page.dart';
 
 class NavigationScreen extends StatefulWidget {
   const NavigationScreen({super.key});
@@ -27,7 +20,6 @@ class _NavigationScreenState extends State<NavigationScreen> {
     const TasksPage(),
     const QuotationsPage(),
     const ContractsPage(),
-    // const SettingsPage(),
 
     Container(),
   ];
@@ -37,7 +29,6 @@ class _NavigationScreenState extends State<NavigationScreen> {
     "Công việc",
     "Báo giá",
     "Hợp đồng",
-    "Cài đặt",
   ];
 
   final List<List<Widget>> _actions = [
