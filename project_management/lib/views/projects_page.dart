@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_management/bloc/project_cubit.dart';
+import 'package:project_management/views/project_detail_page.dart';
 
 class ProjectsPage extends StatefulWidget {
   const ProjectsPage({super.key});
@@ -26,10 +27,7 @@ class _ProjectsPageState extends State<ProjectsPage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              const Text(
-                "Tạo dự án",
-                style: TextStyle(fontSize: 18),
-              ),
+              const Text("Tạo dự án", style: TextStyle(fontSize: 18)),
               IconButton(
                 icon: const Icon(Icons.add),
                 onPressed: () => _showCreateProjectDialog(context),
@@ -72,6 +70,14 @@ class _ProjectsPageState extends State<ProjectsPage> {
                           color: _getPriorityColor(project["priority"]),
                         ),
                       ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ProjectDetailPage(projectId: project["_id"]),
+                          ),
+                        );
+                      },
                     ),
                   );
                 },
@@ -115,7 +121,6 @@ class _ProjectsPageState extends State<ProjectsPage> {
                   TextField(controller: nameController, decoration: const InputDecoration(labelText: "Tên dự án")),
                   TextField(controller: descriptionController, decoration: const InputDecoration(labelText: "Mô tả")),
                   const SizedBox(height: 10),
-                  
                   Row(
                     children: [
                       Text(startDate == null
@@ -171,11 +176,11 @@ class _ProjectsPageState extends State<ProjectsPage> {
                   onPressed: () {
                     if (nameController.text.isNotEmpty && startDate != null && endDate != null) {
                       context.read<ProjectCubit>().createProject(
-                        nameController.text,
-                        descriptionController.text,
-                        startDate!,
-                        endDate!,
-                      );
+                            nameController.text,
+                            descriptionController.text,
+                            startDate!,
+                            endDate!,
+                          );
                       Navigator.pop(context);
                     }
                   },

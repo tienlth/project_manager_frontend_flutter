@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_management/bloc/task_cubit.dart';
+import 'package:project_management/views/task_detail_page.dart';
 
 class TasksPage extends StatefulWidget {
   const TasksPage({super.key});
@@ -40,6 +41,14 @@ class _TasksPageState extends State<TasksPage> {
                   return Card(
                     margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     child: ListTile(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => TaskDetailPage(taskId: task["_id"]),
+                          ),
+                        );
+                      },
                       title: Text(task["title"], style: const TextStyle(fontWeight: FontWeight.bold)),
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,

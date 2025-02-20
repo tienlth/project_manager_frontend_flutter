@@ -1,17 +1,17 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
 import 'package:project_management/network/services/project_api_service.dart';
-import 'package:project_management/network/dio_client.dart';
 
 class ProjectState {
   final List<dynamic> projects;
+  final Map<String, dynamic>? projectDetail; // Thêm projectDetail để lưu chi tiết dự án
   final bool isLoading;
   final String? errorMessage;
   final String? successMessage;
 
   ProjectState({
     this.projects = const [],
+    this.projectDetail,
     this.isLoading = false,
     this.errorMessage,
     this.successMessage,
@@ -19,12 +19,14 @@ class ProjectState {
 
   ProjectState copyWith({
     List<dynamic>? projects,
+    Map<String, dynamic>? projectDetail,
     bool? isLoading,
     String? errorMessage,
     String? successMessage,
   }) {
     return ProjectState(
       projects: projects ?? this.projects,
+      projectDetail: projectDetail ?? this.projectDetail,
       isLoading: isLoading ?? this.isLoading,
       errorMessage: errorMessage,
       successMessage: successMessage,
@@ -34,7 +36,6 @@ class ProjectState {
 
 class ProjectCubit extends Cubit<ProjectState> {
   final ProjectApiService _projectService = ProjectApiService();
-  final DioClient _dioClient = GetIt.instance<DioClient>();
 
   ProjectCubit() : super(ProjectState());
 
@@ -74,4 +75,14 @@ class ProjectCubit extends Cubit<ProjectState> {
     }
   }
 
+  Future<void> fetchProjectDetail(String projectId) async {
+    emit(state.copyWith(isLoading: true, errorMessage: null));
+
+    try {
+      final projectDetail = await _projectService.fetchProjectBySlug(projectId);
+      emit(state.copyWith(isLoading: false, projectDetail: projectDetail));
+    } catch (e) {
+      emit(state.copyWith(isLoading: false, errorMessage: "Không thể tải chi tiết dự án!"));
+    }
+  }
 }

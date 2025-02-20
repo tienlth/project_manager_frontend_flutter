@@ -4,6 +4,15 @@ import 'package:project_management/network/dio_client.dart';
 class TaskApiService {
   final DioClient _dio = GetIt.instance<DioClient>();
 
+  Future<Map<String, dynamic>> fetchTaskBySlug(String slugId) async {
+    try {
+      final response = await _dio.get('/tasks/$slugId');
+      return response.data;
+    } catch (e) {
+      throw Exception("Không thể lấy thông tin công việc: ${e.toString()}");
+    }
+  }
+
   Future<List<dynamic>> fetchAllTasks() async {
     final response = await _dio.get('/tasks');
     return response.data;
