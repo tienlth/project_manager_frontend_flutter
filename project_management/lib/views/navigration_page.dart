@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:project_management/bloc/project_cubit.dart';
 import 'package:project_management/views/projects_page.dart';
-// import 'tasks_screen.dart';
-// import 'quotations_screen.dart';
-// import 'contracts_screen.dart';
-// import 'settings_screen.dart';
+import 'package:project_management/views/tasks_page.dart';
+import 'package:project_management/views/widgets/app_bar.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+// import 'projects_page.dart';
+// import 'tasks_page.dart';
+// import 'quotations_page.dart';
+// import 'contracts_page.dart';
+// import 'settings_page.dart';
 
 class NavigationScreen extends StatefulWidget {
   const NavigationScreen({super.key});
@@ -15,16 +20,32 @@ class NavigationScreen extends StatefulWidget {
 class _NavigationScreenState extends State<NavigationScreen> {
   int _selectedIndex = 0;
 
-  final List<Widget> _screens = [
+  final List<Widget> _pages = [
     const ProjectsPage(),
-    // const TasksScreen(),
-    // const QuotationsScreen(),
-    // const ContractsScreen(),
-    // const SettingsScreen(),
+    const TasksPage(),
+    // const QuotationsPage(),
+    // const ContractsPage(),
+    // const SettingsPage(),
+
     Container(),
     Container(),
     Container(),
-    Container(),
+  ];
+
+  final List<String> _titles = [
+    "Dự án",
+    "Công việc",
+    "Báo giá",
+    "Hợp đồng",
+    "Cài đặt",
+  ];
+
+  final List<List<Widget>> _actions = [
+    [], 
+    [],
+    [],
+    [],
+    [],
   ];
 
   void _onItemTapped(int index) {
@@ -36,7 +57,8 @@ class _NavigationScreenState extends State<NavigationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _screens[_selectedIndex],
+      appBar: AppBarWidget(title: _titles[_selectedIndex], actions: _actions[_selectedIndex]),
+      body: _pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
