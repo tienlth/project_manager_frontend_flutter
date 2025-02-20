@@ -20,10 +20,10 @@ class _AuthPageState extends State<AuthPage> {
     final authCubit = context.read<AuthCubit>();
 
     if (_isLogin) {
-      await authCubit.login(_emailController.text, _passwordController.text);
+      await authCubit.login(_emailController.text, _passwordController.text, context);
     } else {
       await authCubit.signUp(
-          _nameController.text, _emailController.text, _passwordController.text);
+          _nameController.text, _emailController.text, _passwordController.text, context);
     }
 
     setState(() => _isLoading = false);
@@ -55,6 +55,7 @@ class _AuthPageState extends State<AuthPage> {
                   decoration: InputDecoration(labelText: "Mật khẩu"),
                 ),
                 const SizedBox(height: 20),
+
                 if (state.errorMessage != null)
                   Padding(
                     padding: const EdgeInsets.only(bottom: 10),
@@ -63,6 +64,16 @@ class _AuthPageState extends State<AuthPage> {
                       style: TextStyle(color: Colors.red),
                     ),
                   ),
+
+                if (state.successMessage != null)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: Text(
+                      state.successMessage!,
+                      style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+
                 _isLoading
                     ? Center(child: CircularProgressIndicator())
                     : ElevatedButton(
@@ -76,7 +87,7 @@ class _AuthPageState extends State<AuthPage> {
                       onPressed: () {
                         setState(() => _isLogin = !_isLogin);
                       },
-                      child: Text(_isLogin ? " Đăng ký" :  "Đăng nhập"),
+                      child: Text(_isLogin ? " Đăng ký" : "Đăng nhập"),
                     ),
                   ],
                 ),

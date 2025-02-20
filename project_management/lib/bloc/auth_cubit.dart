@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:project_management/network/services/auth_api_service.dart';
@@ -10,8 +11,16 @@ class AuthState {
   final String? email;
   final String? role;
   final String? errorMessage;
+  final String? successMessage;
 
-  AuthState({this.token, this.username, this.email, this.role, this.errorMessage});
+  AuthState({
+    this.token,
+    this.username,
+    this.email,
+    this.role,
+    this.errorMessage,
+    this.successMessage,
+  });
 }
 
 class AuthCubit extends Cubit<AuthState> {
@@ -20,7 +29,7 @@ class AuthCubit extends Cubit<AuthState> {
 
   AuthCubit() : super(AuthState());
 
-  Future<void> login(String email, String password) async {
+  Future<void> login(String email, String password, BuildContext context) async {
     try {
       final response = await _authService.login(email, password);
       if (response.containsKey("token") && response.containsKey("user")) {
@@ -34,11 +43,13 @@ class AuthCubit extends Cubit<AuthState> {
           username: user["username"],
           email: user["email"],
           role: user["role"],
-          errorMessage: null,
+          successMessage: "Đăng nhập thành công!",
         ));
+
+        Navigator.pushReplacementNamed(context, '/home');
       }
     } catch (e) {
-      if (e is DioException ) {
+      if (e is DioException) {
         emit(AuthState(errorMessage: e.response?.data["message"] ?? "Tài khoản không tồn tại!"));
       } else {
         emit(AuthState(errorMessage: "Đã có lỗi xảy ra, vui lòng thử lại!"));
@@ -46,7 +57,7 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  Future<void> signUp(String name, String email, String password) async {
+  Future<void> signUp(String name, String email, String password, BuildContext context) async {
     try {
       final response = await _authService.signUp(email, password, name);
       if (response.containsKey("token") && response.containsKey("user")) {
@@ -60,8 +71,10 @@ class AuthCubit extends Cubit<AuthState> {
           username: user["username"],
           email: user["email"],
           role: user["role"],
-          errorMessage: null,
+          successMessage: "Đăng ký thành công!",
         ));
+
+        Navigator.pushReplacementNamed(context, '/home');
       }
     } catch (e) {
       if (e is DioException) {
@@ -71,4 +84,10 @@ class AuthCubit extends Cubit<AuthState> {
       }
     }
   }
+
+  void logout(BuildContext context) {
+  emit(AuthState()); 
+  _dioClient.clearToken(); 
+  Navigator.pushReplacementNamed(context, '/login');
+}
 }
