@@ -2,9 +2,11 @@ import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_management/network/services/project_api_service.dart';
 import 'package:project_management/network/services/task_api_service.dart';
+import 'package:project_management/network/services/users_api_service.dart';
 
 class TaskState {
   final List<dynamic> tasks;
+  final List<dynamic> users;
   final Map<String, dynamic>? taskDetail;
   final bool isLoading;
   final String? errorMessage;
@@ -12,6 +14,7 @@ class TaskState {
 
   TaskState({
     this.tasks = const [],
+    this.users = const [],
     this.taskDetail,
     this.isLoading = false,
     this.errorMessage,
@@ -20,6 +23,7 @@ class TaskState {
 
   TaskState copyWith({
     List<dynamic>? tasks,
+    List<dynamic>? users,
     Map<String, dynamic>? taskDetail,
     bool? isLoading,
     String? errorMessage,
@@ -27,6 +31,7 @@ class TaskState {
   }) {
     return TaskState(
       tasks: tasks ?? this.tasks,
+      users: users ?? this.users,
       taskDetail: taskDetail ?? this.taskDetail,
       isLoading: isLoading ?? this.isLoading,
       errorMessage: errorMessage,
@@ -38,6 +43,7 @@ class TaskState {
 class TaskCubit extends Cubit<TaskState> {
   final TaskApiService _taskService = TaskApiService();
   final ProjectApiService _projectService = ProjectApiService();
+  final UserApiService _userService = UserApiService();
 
   TaskCubit() : super(TaskState());
 
@@ -81,7 +87,8 @@ class TaskCubit extends Cubit<TaskState> {
 
     try {
       final taskDetail = await _taskService.fetchTaskBySlug(taskId);
-      emit(state.copyWith(isLoading: false, taskDetail: taskDetail));
+      final users = await _userService.fetchUsers();
+      emit(state.copyWith(isLoading: false, taskDetail: taskDetail, users: users));
     } catch (e) {
       emit(state.copyWith(isLoading: false, errorMessage: "Không thể tải chi tiết công việc!"));
     }

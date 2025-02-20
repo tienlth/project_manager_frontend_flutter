@@ -59,7 +59,6 @@ class _NavigationScreenState extends State<NavigationScreen> {
           BottomNavigationBarItem(icon: Icon(Icons.task), label: 'Tasks'),
           BottomNavigationBarItem(icon: Icon(Icons.receipt), label: 'Quotations'),
           BottomNavigationBarItem(icon: Icon(Icons.assignment), label: 'Contracts'),
-          BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings'),
         ],
       ),
     );

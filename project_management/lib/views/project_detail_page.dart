@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_management/bloc/project_cubit.dart';
+import 'package:project_management/views/task_detail_page.dart';
 
 class ProjectDetailPage extends StatelessWidget {
   final String projectId;
@@ -76,24 +77,49 @@ Widget build(BuildContext context) {
                     final task = project["tasks"][index];
                     final taskProgress = (task["progress"] as num).toDouble();
 
-                    return Card(
-                      color: Colors.grey[200],
-                      margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 6),
-                      child: Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(task["title"], style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                            const SizedBox(height: 6),
-                            Text("Mô tả: ${task["description"]}"),
-                            _buildColoredText("Trạng thái", task["status"], _getStatusColor(task["status"])),
-                            _buildColoredText("Ưu tiên", task["priority"], _getPriorityColor(task["priority"])),
-                            Text("Bắt đầu: ${task["startDate"]}"),
-                            Text("Kết thúc: ${task["endDate"]}"),
-                            const SizedBox(height: 6),
-                            _buildProgressBar(taskProgress),
-                          ],
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => TaskDetailPage(taskId: task["_id"]),
+                          ),
+                        );
+                      },
+                      child: Card(
+                        color: Colors.grey[200],
+                        margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 6),
+                        child: Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(task["title"], style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                              const SizedBox(height: 6),
+                              Text("Mô tả: ${task["description"]}"),
+                              Row(
+                                children: [
+                                  const Text("Người thực hiện: "),
+                                  task["assignees"].length > 0?
+                                  Expanded(
+                                    child: Wrap(
+                                      spacing: 8,
+                                      children: (task["assignees"] as List<dynamic>).map<Widget>((user) {
+                                        return Text(user["username"], style: TextStyle(fontWeight: FontWeight.bold));
+                                      }).toList(),
+                                    ),
+                                  )
+                                  : Text("Chưa có"),
+                                ],
+                              ),
+                              _buildColoredText("Trạng thái", task["status"], _getStatusColor(task["status"])),
+                              _buildColoredText("Ưu tiên", task["priority"], _getPriorityColor(task["priority"])),
+                              Text("Bắt đầu: ${task["startDate"]}"),
+                              Text("Kết thúc: ${task["endDate"]}"),
+                              const SizedBox(height: 6),
+                              _buildProgressBar(taskProgress),
+                            ],
+                          ),
                         ),
                       ),
                     );

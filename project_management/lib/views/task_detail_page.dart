@@ -35,6 +35,30 @@ class TaskDetailPage extends StatelessWidget {
                 children: [
                   _buildInfoField("Tên công việc", task["title"]),
                   _buildInfoField("Mô tả", task["description"]),
+                  Container(
+                    width: double.infinity,
+                    margin: const EdgeInsets.only(bottom: 8),
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      children: [
+                        const Text("Người thực hiện: "),
+                        task["assignees"].length > 0?
+                        Expanded(
+                          child: Wrap(
+                            spacing: 8,
+                            children: (task["assignees"] as List<dynamic>).map<Widget>((user) {
+                              return Text(user["username"], style: TextStyle(fontWeight: FontWeight.bold));
+                            }).toList(),
+                          ),
+                        )
+                        : Text("Chưa có"),
+                      ],
+                    ),
+                  ),
                   _buildColoredText("Ưu tiên", task["priority"], _getPriorityColor(task["priority"])),
                   _buildColoredText("Trạng thái", task["status"], _getStatusColor(task["status"])),
 
@@ -58,7 +82,7 @@ class TaskDetailPage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       ElevatedButton.icon(
-                        onPressed: () => _showUpdateTaskDialog(context, task),
+                        onPressed: () => _showUpdateTaskDialog(context, task, state.users),
                         icon: const Icon(Icons.edit),
                         label: const Text("Cập nhật"),
                       ),
@@ -79,7 +103,7 @@ class TaskDetailPage extends StatelessWidget {
     );
   }
 
-  void _showUpdateTaskDialog(BuildContext context, Map<String, dynamic> task) {
+  void _showUpdateTaskDialog(BuildContext context, Map<String, dynamic> task, List<dynamic> users) {
   TextEditingController titleController = TextEditingController(text: task["title"]);
   TextEditingController descriptionController = TextEditingController(text: task["description"]);
   TextEditingController progressController = TextEditingController(text: task["progress"].toString());
@@ -163,11 +187,11 @@ class TaskDetailPage extends StatelessWidget {
                       },
                     ),
 
-                    DropdownButtonFormField<String>(
+                    DropdownButtonFormField<dynamic>(
                       value: selectedAssignee.isNotEmpty ? selectedAssignee : null,
                       decoration: const InputDecoration(labelText: "Giao Cho"),
-                      items: ["User1", "User2", "User3"] 
-                          .map((user) => DropdownMenuItem(value: user, child: Text(user)))
+                      items: users 
+                          .map((user) => DropdownMenuItem(value: user["_id"], child: Text(user["username"])))
                           .toList(),
                       onChanged: (value) => setState(() => selectedAssignee = value!),
                     ),
@@ -179,7 +203,7 @@ class TaskDetailPage extends StatelessWidget {
                 TextButton(
                   onPressed: () {
                     context.read<TaskCubit>().updateTask(
-                      task["id"],
+                      task["_id"],
                       {
                         "title": titleController.text,
                         "description": descriptionController.text,
