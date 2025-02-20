@@ -21,19 +21,6 @@ class _TasksPageState extends State<TasksPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Padding(
-        //   padding: const EdgeInsets.all(12.0),
-        //   child: Row(
-        //     mainAxisAlignment: MainAxisAlignment.end,
-        //     children: [
-        //       const Text("Tạo công việc", style: TextStyle(fontSize: 18)),
-        //       IconButton(
-        //         icon: const Icon(Icons.add),
-        //         onPressed: () => _showCreateTaskDialog(context),
-        //       ),
-        //     ],
-        //   ),
-        // ),
         Expanded(
           child: BlocBuilder<TaskCubit, TaskState>(
             builder: (context, state) {
@@ -57,6 +44,7 @@ class _TasksPageState extends State<TasksPage> {
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          Text("Dự án: ${task["project"]["projectName"]}", style: const TextStyle(fontWeight: FontWeight.w700)),
                           Text("Mô tả: ${task["description"]}"),
                           Row(
                             children: [
@@ -70,8 +58,8 @@ class _TasksPageState extends State<TasksPage> {
                           ),
                           Text("Bắt đầu: ${task["startDate"]}"),
                           Text("Kết thúc: ${task["endDate"]}"),
-                          Text("Tiến độ: ${task["status"]}"),
-                          Text("Trạng thái: ${task["progress"]}"),
+                          Text("Tiến độ: ${task["progress"]}"),
+                          Text("Trạng thái: ${task["status"]}"),
                         ],
                       ),
                     ),
