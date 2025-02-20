@@ -4,7 +4,7 @@ import 'package:project_management/network/services/project_api_service.dart';
 
 class ProjectState {
   final List<dynamic> projects;
-  final Map<String, dynamic>? projectDetail; // Thêm projectDetail để lưu chi tiết dự án
+  final Map<String, dynamic>? projectDetail;
   final bool isLoading;
   final String? errorMessage;
   final String? successMessage;
@@ -85,4 +85,34 @@ class ProjectCubit extends Cubit<ProjectState> {
       emit(state.copyWith(isLoading: false, errorMessage: "Không thể tải chi tiết dự án!"));
     }
   }
+
+  Future<void> addTaskToProject(Map<String, dynamic> data) async {
+    emit(state.copyWith(isLoading: true, errorMessage: null, successMessage: null));
+
+    try {
+      final response = await _projectService.addTaskToProject(data);
+
+      if (response.containsKey("task")) {
+        final updatedTasks = List<Map<String, dynamic>>.from(state.projectDetail?["tasks"] ?? []);
+        updatedTasks.add(response["task"]);
+
+        final updatedProjectDetail = Map<String, dynamic>.from(state.projectDetail ?? {});
+        updatedProjectDetail["tasks"] = updatedTasks;
+
+        emit(state.copyWith(
+          isLoading: false,
+          projectDetail: updatedProjectDetail,
+          successMessage: "Task đã được thêm thành công!",
+        ));
+      } else {
+        throw Exception("Lỗi không xác định!");
+      }
+    } catch (e) {
+      emit(state.copyWith(
+        isLoading: false,
+        errorMessage: "Không thể thêm task vào dự án!",
+      ));
+    }
+  }
+  
 }

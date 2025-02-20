@@ -47,4 +47,22 @@ class TaskApiService {
       throw Exception("Getting data error: ${e.toString()}");
     }
   }
+
+  Future<Map<String, dynamic>> updateTask(String taskId, Map<String, dynamic> updatedData) async {
+    try {
+      final response = await _dio.put('/tasks/$taskId', updatedData);
+      return response.data;
+    } catch (e) {
+      throw Exception("Không thể cập nhật công việc: ${e.toString()}");
+    }
+  }
+
+  Future<Map<String, dynamic>> deleteTask(String taskId) async {
+    try {
+      final response = await _dio.delete('/tasks/$taskId');
+      return response.data;
+    } catch (e) {
+      throw Exception("Không thể xóa công việc: ${e.toString()}");
+    }
+  }
 }

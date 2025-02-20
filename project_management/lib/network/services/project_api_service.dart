@@ -41,4 +41,13 @@ class ProjectApiService {
       throw Exception("Getting data error: ${e.toString()}");
     }
   }
+
+  Future<Map<String, dynamic>> addTaskToProject(Map<String, dynamic> data) async {
+    try {
+      final response = await _dio.post('/tasks', data);
+      return response.data;
+    } catch (e) {
+      throw Exception("Không thể thêm task vào dự án: ${e.toString()}");
+    }
+  }
 }

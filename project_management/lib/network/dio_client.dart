@@ -9,7 +9,7 @@ class DioClient {
       connectTimeout: const Duration(seconds: 10),
       receiveTimeout: const Duration(seconds: 10),
       headers: {"Content-Type": "application/json"},
-       validateStatus: (status) {
+      validateStatus: (status) {
         return status != null; 
       },
     );
@@ -18,7 +18,7 @@ class DioClient {
       onRequest: (options, handler) {
         print("[DIO] Request: ${options.method} ${options.baseUrl}${options.path}");
         if (options.data != null) {
-          print("DIO] Data: ${options.data}");
+          print("[DIO] Data: ${options.data}");
         }
         return handler.next(options);
       },
@@ -37,7 +37,7 @@ class DioClient {
     _dio.options.headers["Authorization"] = "Bearer $token";
   }
 
-   void clearToken() {
+  void clearToken() {
     _dio.options.headers.remove("Authorization");
   }
 
@@ -52,6 +52,22 @@ class DioClient {
   Future<Response> post(String path, dynamic data) async {
     try {
       return await _dio.post(path, data: data);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Response> put(String path, dynamic data) async {
+    try {
+      return await _dio.put(path, data: data);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Response> delete(String path) async {
+    try {
+      return await _dio.delete(path);
     } catch (e) {
       rethrow;
     }

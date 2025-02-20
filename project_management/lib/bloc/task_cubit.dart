@@ -122,4 +122,44 @@ class TaskCubit extends Cubit<TaskState> {
       }
     }
   }
+
+  Future<void> updateTask(String taskId, Map<String, dynamic> updatedData) async {
+    emit(state.copyWith(isLoading: true, errorMessage: null, successMessage: null));
+
+    try {
+      final response = await _taskService.updateTask(taskId, updatedData);
+      if (response.containsKey("task")) {
+        emit(state.copyWith(isLoading: false, successMessage: "Công việc đã được cập nhật!"));
+
+      } else {
+        throw Exception("Lỗi không xác định!");
+      }
+    } catch (e) {
+      if (e is DioException) {
+        emit(state.copyWith(isLoading: false, errorMessage: e.response?.data["message"] ?? "Lỗi khi cập nhật công việc!"));
+      } else {
+        emit(state.copyWith(isLoading: false, errorMessage: "Đã có lỗi xảy ra, vui lòng thử lại!"));
+      }
+    }
+  }
+
+  Future<void> deleteTask(String taskId) async {
+    emit(state.copyWith(isLoading: true, errorMessage: null, successMessage: null));
+
+    try {
+      final response = await _taskService.deleteTask(taskId);
+      if (response.containsKey("message")) {
+        emit(state.copyWith(isLoading: false, successMessage: "Công việc đã bị xóa!"));
+
+      } else {
+        throw Exception("Lỗi không xác định!");
+      }
+    } catch (e) {
+      if (e is DioException) {
+        emit(state.copyWith(isLoading: false, errorMessage: e.response?.data["message"] ?? "Lỗi khi xóa công việc!"));
+      } else {
+        emit(state.copyWith(isLoading: false, errorMessage: "Đã có lỗi xảy ra, vui lòng thử lại!"));
+      }
+    }
+  }
 }
