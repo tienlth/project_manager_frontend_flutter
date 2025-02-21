@@ -2,20 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_management/bloc/quotation_cubit.dart';
 
-class QuotationDetailPage extends StatefulWidget {
-  final String quotationId;
+class QuotationDetailEditPage extends StatefulWidget {
+  final String projectId;
 
-  const QuotationDetailPage({super.key, required this.quotationId});
+  const QuotationDetailEditPage({super.key, required this.projectId});
 
   @override
-  State<QuotationDetailPage> createState() => _QuotationDetailPageState();
+  State<QuotationDetailEditPage> createState() => _QuotationDetailEditPageState();
 }
 
-class _QuotationDetailPageState extends State<QuotationDetailPage> {
+class _QuotationDetailEditPageState extends State<QuotationDetailEditPage> {
   @override
   void initState() {
     super.initState();
-    context.read<QuotationCubit>().fetchQuotationDetail(widget.quotationId);
+    context.read<QuotationCubit>().fetchQuotationDetail(widget.projectId);
   }
 
   Widget _buildInfoField(String label, String value) {

@@ -59,4 +59,15 @@ class QuotationCubit extends Cubit<QuotationState> {
       emit(state.copyWith(isLoading: false, errorMessage: "Lỗi khi lấy chi tiết báo giá!"));
     }
   }
+
+  Future<void> fetchQuotationPreview(String projectId) async {
+    emit(state.copyWith(isLoading: true, errorMessage: null, successMessage: null));
+
+    try {
+      final quotationDetail = await _quotationService.fetchQuotationById(projectId);
+      emit(state.copyWith(isLoading: false, quotationDetail: quotationDetail));
+    } catch (e) {
+      emit(state.copyWith(isLoading: false, errorMessage: "Getting data error!"));
+    }
+  }
 }

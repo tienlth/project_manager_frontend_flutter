@@ -14,4 +14,9 @@ class QuotationApiService {
     return response.data;
   }
 
+  Future<Map<String, dynamic>> fetchQuotationPreview(String project) async {
+    final response = await _dio.get('/quotations/$project/preview');
+    return response.data;
+  }
+
 }

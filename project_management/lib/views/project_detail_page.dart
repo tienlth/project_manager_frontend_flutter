@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project_management/bloc/project_cubit.dart';
+import 'package:project_management/views/quotation_detail_edit_page.dart';
 import 'package:project_management/views/task_detail_page.dart';
 
 class ProjectDetailPage extends StatelessWidget {
@@ -129,9 +130,28 @@ Widget build(BuildContext context) {
             );
           },
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () => _showAddTaskDialog(context),
-          child: const Icon(Icons.add),
+        floatingActionButton: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            FloatingActionButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => QuotationDetailEditPage(projectId: projectId),
+                  ),
+                );
+              },
+              tooltip: 'Tạo báo giá',
+              child: const Icon(Icons.request_quote),
+            ),
+            const SizedBox(height: 12),
+            FloatingActionButton(
+              onPressed: () => _showAddTaskDialog(context),
+              tooltip: 'Thêm công việc',
+              child: const Icon(Icons.add),
+            ),
+          ],
         ),
       ),
     ),
